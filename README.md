@@ -2,6 +2,16 @@
 Analyzed over 1 million rows of Apple retail sales data globally. This project covers product categories, individual products, sales transactions, store information, and warranty claims. The goal is to extract valuable insights and answer key business questions using advanced SQL queries.
 ## Project Overview
 This project is designed to showcase advanced SQL querying techniques through the analysis of over 1 million rows of Apple retail sales data. The dataset includes comprehensive information about products, stores, sales transactions, and warranty claims across various Apple retail locations globally.
+globally.
+### Objectives
+The primary goal of this project is to extract valuable insights and answer key business questions using sophisticated SQL queries. By tackling a variety of questions, from basic to complex
+datasets.
+### Key Features
+- **Complex Joins and Aggregations**: Complex SQL joins and aggregate data to uncover meaningful patterns and trends.
+- **Window Functions**: Advanced window functions for running totals, growth analysis, and time-based queries.
+- **Data Segmentation**: Analyzed data across different time frames to gain insights into product performance and sales trends.
+- **Correlation Analysis**: SQL functions to determine relationships between variables, such as product price and warranty claims.
+- **Real-World Problem Solving**: Business-related questions that reflect real-world scenarios
 ## Dataset
 The dataset consists of the following tables:
 
