@@ -6,12 +6,37 @@ globally.
 ### Objectives
 The primary goal of this project is to extract valuable insights and answer key business questions using sophisticated SQL queries. By tackling a variety of questions, from basic to complex
 datasets.
-### Key Features
-- **Complex Joins and Aggregations**: Complex SQL joins and aggregate data to uncover meaningful patterns and trends.
-- **Window Functions**: Advanced window functions for running totals, growth analysis, and time-based queries.
-- **Data Segmentation**: Analyzed data across different time frames to gain insights into product performance and sales trends.
-- **Correlation Analysis**: SQL functions to determine relationships between variables, such as product price and warranty claims.
-- **Real-World Problem Solving**: Business-related questions that reflect real-world scenarios
+## Key Highlights
+### 1. **Business Analysis**
+- **Geographic Reach**: Assessed the number of stores per country to optimize coverage and pinpoint growth opportunities.
+- **Warranty Performance**: Analyzed claims to identify common issues and outcomes, such as voided or successful repairs.
+- **Year-on-Year Trends**: Compared performance across years to identify growth rates and seasonal patterns.
+- **Product Pricing**: Evaluated average product prices within each category to inform pricing strategies.
+
+### 2. **Operational Efficiency**
+- **Query Optimization**: Indexed key columns (`product_id`, `store_id`) to improve the performance of queries for large datasets.
+- **Sales Summaries**: Computed total units sold per store and per product, revealing high-performing locations and informing inventory decisions.
+
+### 3. **Product Insights**
+- **Category Performance**: Identified top-performing categories to guide marketing and investment priorities.
+- **Warranty Analytics**: Measured claims filed within different timeframes to understand product durability and warranty claim patterns.
+## Database Schema
+The dataset includes the following tables:
+
+1. **`stores`**:
+   - Details of Apple retail locations (e.g., ID, name, city, country).
+
+2. **`category`**:
+   - Product category details (e.g., ID, name).
+
+3. **`products`**:
+   - Information on Apple products, including launch dates and prices.
+
+4. **`sales`**:
+   - Sales transactions with details such as sale dates, product IDs, and quantities sold.
+
+5. **`warranty`**:
+   - Warranty claims, including claim dates and repair status.
 ## Dataset
 The dataset consists of the following tables:
 
@@ -44,7 +69,61 @@ The dataset consists of the following tables:
   - `claim_date`: Date the claim was made.
   - `sale_id`: References the sales table.
   - `repair_status`: Status of the warranty claim (e.g., Paid Repaired, Warranty Void).
+## Key SQL Queries
+Below are examples of advanced SQL queries used in this project:
+1. **Top-performing Stores by Sales**:
+   ```sql
+   SELECT store_id, store_name, SUM(quantity) AS total_units
+   FROM sales
+   JOIN stores ON stores.store_id = sales.store_id
+   GROUP BY store_id, store_name
+   ORDER BY total_units DESC;
+2. Warranty Claims Analysis:
+   ```sql
+   SELECT repair_status, COUNT(claim_id) AS claim_count
+   FROM warranty
+   GROUP BY repair_status;
+3. Year-on-Year Sales Growth:
+   ```sql
+   WITH cte AS (
+    SELECT YEAR(sale_date) AS year, SUM(quantity) AS total_sales
+    FROM sales
+    GROUP BY YEAR(sale_date)
+    )
+    SELECT year, 
+       (total_sales - LAG(total_sales) OVER (ORDER BY year)) / 
+       LAG(total_sales) OVER (ORDER BY year) * 100 AS growth_rate
+    FROM cte;
+4. Product Pricing Insights: 
+   ```sql
+    SELECT category_name, ROUND(AVG(price), 2) AS avg_price
+    FROM products
+    JOIN category ON category.category_id = products.category_id
+    GROUP BY category_name;
 
+5. Warranty Filed Within 180 Days:
+  ```sql
+    SELECT COUNT(*) AS claims_count
+    FROM warranty
+    JOIN sales ON warranty.sale_id = sales.sale_id
+    WHERE DATEDIFF(DAY, sales.sale_date, warranty.claim_date) <= 180;
+```
+## Insights from Analysis
+### Geographic Trends
+- Apple has a strong retail presence globally, but the distribution of stores varies significantly by region.
+- Opportunities for expansion exist in underrepresented markets where demand for premium products is growing.
+### Sales Patterns
+- Top-performing stores generate a large share of the total sales, highlighting areas for potential investments or replication strategies.
+- Year-on-year sales growth varies, with specific product categories showing higher demand during certain seasons.
+### Product Trends
+- Products introduced within the last two years are the primary revenue drivers, demonstrating a preference for the latest technology.
+- Among all product categories, **electronics** lead in sales volume, followed by **accessories**.
+### Warranty Claims
+- Products with high warranty claims within 180 days may require closer attention to quality control during production.
+- Most warranty issues are resolved successfully, but a subset of claims remains void due to policy violations.
+### Operational Insights
+- Sales operations benefit from optimizing inventory levels in high-demand stores based on total units sold.
+- Pricing strategies can be fine-tuned to enhance average revenue per product, particularly in the accessories category.
 
 ## SQL Queries
 ### 1. Find the number of stores in each country
